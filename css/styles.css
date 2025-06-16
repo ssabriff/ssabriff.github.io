@@ -120,12 +120,14 @@ section{
     cursor: pointer;
     transition: background-color 0.3s ease;
     text-decoration: none;
+    margin: 5px;
 }
 
 .boton_opciones {
     padding: 10px;
     border-radius: 5px;
     border: 1px solid #ccc;
+    margin: 5px;
 }
 
 .precio {
@@ -269,6 +271,32 @@ section{
   }
 }
 
+@media screen and (max-width: 625px){
+  .card{
+    width: 90% !important;
+    margin: 15px auto;
+    padding: 20px !important;
+  }
+
+  .boton_comprar{
+    width: 100%;
+    margin: 10px 0;
+  }
+  .boton_opciones{
+    width: 100%;
+    margin: 10px 0;
+  }
+    
+  .contenedor_padre{
+    flex-direction: column;
+    align-items: center;
+  }
+
+  section{
+    margin: 20px;
+  }
+}
+
 /*pseudoclases*/
 .card:hover{
     transform: translateY(-10px);
@@ -350,4 +378,3 @@ h3{
     background-color: #a82f1b;
     transform: scale(1.05);
 }
-
