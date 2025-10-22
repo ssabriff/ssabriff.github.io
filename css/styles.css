@@ -378,3 +378,36 @@ h3{
     background-color: #a82f1b;
     transform: scale(1.05);
 }
+
+/* ===== Icono del carrito ===== */
+.icono-carrito {
+  width: 28px;              /* tamaño similar al emoji */
+  height: 28px;
+  object-fit: contain;      /* evita deformaciones */
+  vertical-align: middle;   /* alinea con el texto */
+  filter: brightness(0) saturate(100%) invert(96%) sepia(21%) saturate(473%) hue-rotate(329deg) brightness(107%) contrast(102%);
+  transition: transform 0.2s ease;
+  margin-left: 5px;         /* pequeño espacio del borde */
+  margin-right: 5px;
+}
+
+/* efecto hover suave */
+.icono-carrito:hover {
+  transform: scale(1.15);
+}
+
+/* Ajuste del botón del carrito */
+#boton-carrito {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;   /* sin fondo raro */
+  border: none;              /* quita borde azul feo */
+  padding: 5px;
+}
+
+/* Badge del contador */
+#contador-carrito {
+  font-size: 0.8rem;
+  transform: translate(-30%, -30%);
+}

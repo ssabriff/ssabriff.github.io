@@ -1,7 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    
-    
     let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
 
     const botonesComprar = document.querySelectorAll('.boton_comprar');
@@ -10,9 +8,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const contadorCarrito = document.getElementById('contador-carrito');
     const botonFinalizarCompra = document.getElementById('finalizar-compra');
 
-
-    
-
     botonesComprar.forEach(boton => {
         if (!boton.closest('.modal-footer')) {
             boton.addEventListener('click', agregarAlCarrito);
@@ -20,21 +15,20 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     botonFinalizarCompra.addEventListener('click', finalizarCompra);
-
-    
     carritoItemsContainer.addEventListener('click', eliminarDelCarrito);
-    
+
     actualizarCarrito();
-
-
-  
 
     function agregarAlCarrito(evento) {
         const card = evento.target.closest('.card');
+
+        const precioTexto = card.querySelector('.precio').textContent;
+        const precioNumerico = parseFloat(precioTexto.replace(/[^0-9]/g, ''));
+
         const producto = {
             id: card.dataset.id,
             nombre: card.querySelector('.titulos').textContent,
-            precio: parseFloat(card.querySelector('.precio').textContent.replace('Unidad: $', '').replace(/\./g, '')),
+            precio: precioNumerico,
             cantidad: 1
         };
 
@@ -60,8 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
             carrito.forEach(producto => {
                 const itemDiv = document.createElement('div');
                 itemDiv.classList.add('d-flex', 'justify-content-between', 'align-items-center', 'mb-2');
-                
-               
+
                 itemDiv.innerHTML = `
                     <div class="d-flex align-items-center">
                         <span class="textos">${producto.nombre} (x${producto.cantidad})</span>
@@ -71,28 +64,22 @@ document.addEventListener('DOMContentLoaded', () => {
                         <button class="btn btn-danger btn-sm btn-eliminar" data-id="${producto.id}">X</button>
                     </div>
                 `;
+
                 carritoItemsContainer.appendChild(itemDiv);
                 total += producto.precio * producto.cantidad;
             });
         }
-        
+
         carritoTotalElement.textContent = `$${total.toLocaleString('es-AR')}`;
         contadorCarrito.textContent = carrito.reduce((acc, item) => acc + item.cantidad, 0);
-        
+
         guardarCarritoEnStorage();
     }
-    
-   
+
     function eliminarDelCarrito(evento) {
-       
         if (evento.target.classList.contains('btn-eliminar')) {
-          
             const productoId = evento.target.dataset.id;
-            
-           
             carrito = carrito.filter(producto => producto.id !== productoId);
-            
-         
             actualizarCarrito();
         }
     }
@@ -118,8 +105,34 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.href = './agradecimiento.html';
         }, 2000);
     }
-    
+
     function guardarCarritoEnStorage() {
         localStorage.setItem('carrito', JSON.stringify(carrito));
     }
+
+    const cards = document.querySelectorAll('.card');
+
+    cards.forEach(card => {
+        const selectCantidad = card.querySelectorAll('.boton_opciones')[0];
+        const selectExtra = card.querySelectorAll('.boton_opciones')[1];
+        const precioMostrado = card.querySelector('.precio');
+
+        const precioUnidad = parseInt(card.dataset.unidad);
+        const precioDocena = parseInt(card.dataset.docena);
+        const precioExtra = parseInt(card.dataset.extra);
+
+        function actualizarPrecio() {
+            let precioBase = selectCantidad.value === 'Docena' ? precioDocena : precioUnidad;
+            let extraSeleccionado = selectExtra.value !== 'Sin extras' ? precioExtra : 0;
+            let precioFinal = precioBase + extraSeleccionado;
+
+            precioMostrado.textContent = `$${precioFinal.toLocaleString('es-AR')}`;
+        }
+
+        selectCantidad.addEventListener('change', actualizarPrecio);
+        selectExtra.addEventListener('change', actualizarPrecio);
+
+        actualizarPrecio();
+    });
+
 });
